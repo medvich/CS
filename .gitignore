@@ -1,0 +1,13 @@
+# Default PyCharm project ignored files
+.idea/
+HW/.idea/
+HW/src/.ipynb_checkpoints
+HW/src/__pycache__
+
+# Paths
+Lab1/
+Lab2/
+HW/-_-/
+HW/pics/
+
+# Files
