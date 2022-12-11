@@ -7,7 +7,18 @@ HW/src/__pycache__
 # Paths
 Lab1/
 Lab2/
+Lab3/
+
+
+# HW files
 HW/-_-/
 HW/pics/
+HW/bs.vsdx
+HW/dz.docx
+HW/titulnik.docx
+HW/ДЗ_КМ_ЧащинСА_СМ6-113.pdf
 
-# Files
+# Lab4 files
+Lab4/.ipynb_checkpoints/
+Lab4/algorithm.PNG
+Lab4/plot_example.png

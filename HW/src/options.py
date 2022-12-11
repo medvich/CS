@@ -13,8 +13,8 @@ class LBEParams:
     r: float = ny // 9
 
     # environment
-    Re: float = 1000.0
-    uLB: float = 0.1
+    Re: float = 80.0
+    uLB: float = 0.01
     nuLB: float = uLB * r / Re
     omega: float = 1 / (3 * nuLB + 0.5)
 

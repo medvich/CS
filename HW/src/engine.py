@@ -9,6 +9,7 @@ from IPython.display import clear_output
 import imageio
 from os import listdir, getcwd, remove
 from os.path import isfile, join
+from natsort import natsorted
 
 
 LATTICE_VELOCITIES = np.array([[1, 1], [1, 0], [1, -1], [0, 1], [0, 0], [0, -1], [-1, 1], [-1, 0], [-1, -1]])
@@ -38,7 +39,9 @@ def macroscopic(fin, v, nx, ny):
 
 def inletVel(d, x, y):
     uLB, ly = LBEParams.uLB, LBEParams.ny - 1
-    return (1 - d) * uLB * (1 + 1e-4 * np.sin(y / ly * 2 * np.pi))
+#     delta = 1e-4 * np.sin(y / ly * 2 * np.pi)
+    delta = 1e-4
+    return (1 - d) * uLB * (1 + delta)
 
 
 class Obstacle:
@@ -58,7 +61,8 @@ class Solver:
     def __init__(self):
         self.obstacle = Obstacle()
         # plt.imshow(self.obstacle.location().T)
-        self.path = getcwd()[:-3] + 'pics\\'
+        self.pics_path = getcwd()[:-3] + 'pics\\'
+        self.gif_path = getcwd()[:-3]
 
     def solve(self, steps=7700, n_pics=77, **kwargs):
 
@@ -72,8 +76,6 @@ class Solver:
         v = LATTICE_VELOCITIES
         t = WEIGHTS
         fin = equilibrium(1, vel, v, t, nx, ny)
-
-        ind = 0
         
         for time in tqdm(range(steps)):
             
@@ -107,7 +109,6 @@ class Solver:
             rho[self.obstacle.location()] = np.nan
 
             if time % (steps / n_pics) == 0 and time != 0:
-                ind += 1
 
                 fig = plt.figure(figsize=(10, 10), dpi=100)
 
@@ -138,16 +139,16 @@ class Solver:
 
                 # plt.show()
                 # clear_output(True)
-                fig.savefig(self.path + "step{0:01d}.png".format(ind))
+                fig.savefig(self.pics_path + "time{0:01d}.png".format(time))
                 plt.close()
 
     def makeGIF(self, remove_images=False):
-        filenames = [f for f in listdir(self.path) if isfile(join(self.path, f))]
-        with imageio.get_writer(self.path + 'gif.gif', mode='I') as writer:
+        filenames = natsorted([f for f in listdir(self.pics_path) if isfile(join(self.pics_path, f))])
+        with imageio.get_writer(self.gif_path + 'gif.gif', mode='I') as writer:
             for filename in filenames:
-                image = imageio.imread(self.path + filename)
+                image = imageio.imread(self.pics_path + filename)
                 writer.append_data(image)
 
         if remove_images:
             for filename in set(filenames):
-                remove(self.path + filename)
+                remove(self.pics_path + filename)
